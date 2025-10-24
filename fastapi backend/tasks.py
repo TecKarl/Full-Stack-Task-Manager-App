@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import models
 from datetime import datetime
 from database import Session
+from sqlalchemy import text
 
 app = FastAPI()
 sess = Session()
@@ -41,7 +42,7 @@ def create_task(tasks: Event):
     sess.commit()
     return new_task
 
-@app.get("/tasks", response_model=list[Event_read])
+@app.get("/tasks", response_model=list[Event_read], status_code=201)
 def retrieve_tasks():
     tasks = sess.query(models.Task).all()
     if not tasks:
@@ -75,8 +76,9 @@ def delete_task(id: int):
     return {"message": "Task deleted successfully"}
   
 @app.delete("/tasks")
-def delete_tasks():
+def reset_tasks():
     sess.query(models.Task).delete()
+    sess.execute(text("ALTER SEQUENCE tasks_id_seq RESTART WITH 1;"))
     sess.commit()
     return {"message": "All tasks deleted successfully"}
 
