@@ -1,3 +1,5 @@
 __pycache__
-database.py 
-tasks_env
+fastapi backend/database.py 
+fastapi backend/tasks_env
+
+git
