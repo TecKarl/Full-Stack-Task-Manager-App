@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Task Manager</h1>
+        </header>
+
+        <main>
+            <!-- Add Task Form -->
+            <section class="task-form">
+                <h2>Add New Task</h2>
+                <form id="addTaskForm">
+                    <div class="form-group">
+                        <label for="taskDesc">Task Description:</label>
+                        <input type="text" id="taskDesc" name="taskDesc" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                </form>
+            </section>
+
+            <!-- Task List -->
+            <section class="task-list">
+                <div class="task-list-header">
+                    <h2>Your Tasks</h2>
+                    <button id="clearAllTasks" class="btn btn-danger">Clear All Tasks</button>
+                </div>
+                <div class="tasks-container">
+                    <!-- Example Task (will be dynamically generated) -->
+                    <div class="task-item">
+                        <div class="task-content">
+                            <h3>Sample Task</h3>
+                            <p class="task-date">2025-10-27 10:00</p>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn btn-edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-delete"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Edit Task Modal -->
+            <div class="modal" id="editTaskModal">
+                <div class="modal-content">
+                    <h2>Edit Task</h2>
+                    <form id="editTaskForm">
+                        <div class="form-group">
+                            <label for="editTaskDesc">Task Description:</label>
+                            <input type="text" id="editTaskDesc" name="editTaskDesc" required>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" id="closeModal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

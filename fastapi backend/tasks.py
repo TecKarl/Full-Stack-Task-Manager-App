@@ -1,4 +1,6 @@
 from fastapi import FastAPI, HTTPException
+from typing import Optional
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import models
 from datetime import datetime
@@ -6,11 +8,19 @@ from database import Session
 from sqlalchemy import text
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"], 
+)
 sess = Session()
 
 class Event(BaseModel):
     task_desc: str
-    date: datetime
+    date: Optional[datetime] = None
 
 class Event_read(BaseModel):
     task_id: int
@@ -32,17 +42,17 @@ class Gathering(BaseModel):
 def login_page():
     return{"message": "Auth later"}
 
-@app.post("/tasks", response_model=Event_read)
+@app.post("/tasks", response_model=Event_read, status_code=201)
 def create_task(tasks: Event):
     new_task = models.Task(
         task_desc = tasks.task_desc,
-        date = tasks.date
+        date = tasks.date if tasks.date else datetime.now()
     )
     sess.add(new_task)
     sess.commit()
     return new_task
 
-@app.get("/tasks", response_model=list[Event_read], status_code=201)
+@app.get("/tasks", response_model=list[Event_read], status_code=200)
 def retrieve_tasks():
     tasks = sess.query(models.Task).all()
     if not tasks:
