@@ -29,7 +29,6 @@ class Event_read(BaseModel):
 
 class Event_change(BaseModel):
     task_desc: str
-    date: datetime
 
 
 class Gathering(BaseModel):
@@ -63,21 +62,18 @@ def retrieve_tasks():
 
 @app.patch("/tasks/{id}")
 def update_task(id: int, new_data: Event_change):
-    task = sess.query(models.Task).filter(models.Task.task_id == id)    
+    task_query = sess.query(models.Task).filter(models.Task.task_id == id)
+    task = task_query.first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     
-    task.update({
-        "task_desc": new_data.task_desc     
-    })
+    task_query.update({"task_desc": new_data.task_desc})
     sess.commit()
-    return {"Message": "Task updated succesfully"}
+    return {"message": "Task updated successfully"}
 
-@app.delete("/tasks/{id}")
+@app.delete("/tasks/{id}", status_code=204)
 def delete_task(id: int):
-    task = sess.query(models.Task).filter(models.Task.task_id == id).first()
-    """ search_byID = sess.query(models.Task.task_id).all() """
-    
+    task = sess.query(models.Task).filter(models.Task.task_id == id).first() 
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     
@@ -85,7 +81,7 @@ def delete_task(id: int):
     sess.commit()
     return {"message": "Task deleted successfully"}
   
-@app.delete("/tasks")
+@app.delete("/tasks", status_code=204)
 def reset_tasks():
     sess.query(models.Task).delete()
     sess.execute(text("ALTER SEQUENCE tasks_id_seq RESTART WITH 1;"))
